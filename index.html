@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>发财少女 - 微信群聊</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Nunito:wght@400;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* ========== 清爽操作界面 ========== */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .edit-panel {
+            max-width: 800px;
+            margin: 0 auto 20px auto;
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .edit-panel h2 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .edit-section {
+            margin-bottom: 16px;
+        }
+
+        .edit-section label {
+            display: block;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 6px;
+        }
+
+        .edit-section select,
+        .edit-section input[type="text"],
+        .edit-section textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #d9d9d9;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .edit-section select:focus,
+        .edit-section input:focus,
+        .edit-section textarea:focus {
+            outline: none;
+            border-color: #07c160;
+        }
+
+        .edit-section textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #07c160;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #06ad56;
+        }
+
+        .btn-secondary {
+            background: #f2f2f2;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e6e6e6;
+        }
+
+        .btn-info {
+            background: #1890ff;
+            color: white;
+        }
+
+        .btn-info:hover {
+            background: #40a9ff;
+        }
+
+        .btn-danger {
+            background: #ff4d4f;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #ff7875;
+        }
+
+        .btn-warning {
+            background: #faad14;
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #ffc53d;
+        }
+
+        .image-upload-area {
+            border: 2px dashed #d9d9d9;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            background: #fafafa;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .image-upload-area:hover {
+            border-color: #07c160;
+        }
+
+        .image-upload-area.has-image {
+            border-style: solid;
+            border-color: #07c160;
+            background: #f6ffed;
+        }
+
+        .upload-hint {
+            color: #999;
+            font-size: 14px;
+        }
+
+        .preview-image {
+            max-width: 200px;
+            max-height: 150px;
+            border-radius: 8px;
+        }
+
+        /* Emoji 选择器 */
+        .emoji-picker {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            max-height: 120px;
+            overflow-y: auto;
+        }
+
+        .emoji-btn-small {
+            font-size: 22px;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 4px 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .emoji-btn-small:hover {
+            background: #f0f0f0;
+            transform: scale(1.1);
+        }
+
+        .print-hint {
+            max-width: 800px;
+            margin: 0 auto 20px auto;
+            background: #e6f7ff;
+            border: 1px solid #91d5ff;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #096dd9;
+        }
+
+        .add-page-btn {
+            max-width: 800px;
+            margin: 20px auto;
+            text-align: center;
+        }
+
+        /* ========== 漫画风格微信界面 ========== */
+        .phone-page {
+            width: 375px;
+            background: #fff;
+            border-radius: 40px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            overflow: hidden;
+            position: relative;
+            margin: 0 auto 30px auto;
+            border: 3px solid #333;
+        }
+
+        .phone-page::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border-radius: 42px;
+            border: 1px solid rgba(0,0,0,0.1);
+            pointer-events: none;
+        }
+
+        /* 状态栏 */
+        .status-bar {
+            height: 44px;
+            background: #ededed;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #000;
+            border-bottom: 2px solid #333;
+            position: relative;
+        }
+
+        .status-bar::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: repeating-linear-gradient(
+                90deg,
+                #333 0px,
+                #333 3px,
+                transparent 3px,
+                transparent 6px
+            );
+            opacity: 0.3;
+        }
+
+        /* 导航栏 */
+        .nav-bar {
+            height: 44px;
+            background: #ededed;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 10px;
+            border-bottom: 2px solid #333;
+            position: relative;
+        }
+
+        .nav-left, .nav-right {
+            width: 60px;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-right {
+            justify-content: flex-end;
+        }
+
+        .back-btn, .more-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: #000;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .nav-title {
+            flex: 1;
+            text-align: center;
+            font-size: 17px;
+            font-weight: 600;
+            color: #000;
+        }
+
+        /* 聊天区域 */
+        .chat-container {
+            height: 580px;
+            background: #f5f5f5;
+            overflow-y: auto;
+            padding: 15px;
+            position: relative;
+        }
+
+        /* 可爱小装饰 */
+        .chat-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Ctext x='80' y='20' font-size='8' opacity='0.15'%3E✨%3C/text%3E%3Ctext x='10' y='90' font-size='10' opacity='0.1'%3E💫%3C/text%3E%3C/svg%3E");
+            pointer-events: none;
+        }
+
+        /* 时间分隔线 */
+        .time-divider {
+            text-align: center;
+            margin: 15px 0;
+            color: #999;
+            font-size: 12px;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 4px 12px;
+            background: #f5f5f5;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-shadow: 1px 1px 0 #ddd, -0.5px -0.5px 0 #eee;
+        }
+
+        /* 消息气泡 */
+        .message {
+            display: flex;
+            margin-bottom: 15px;
+            align-items: flex-start;
+            position: relative;
+        }
+
+        .message.self {
+            flex-direction: row-reverse;
+        }
+
+        /* 头像 - 带可爱装饰 */
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+            overflow: hidden;
+            flex-shrink: 0;
+            border: 2px solid #333;
+            box-shadow: 2px 2px 0 rgba(0,0,0,0.1), inset 0 0 0 1px rgba(255,255,255,0.5);
+            position: relative;
+        }
+
+        .avatar::after {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 8px;
+            pointer-events: none;
+        }
+
+        /* 头像角落小装饰 */
+        .avatar-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        .avatar-decoration {
+            position: absolute;
+            font-size: 12px;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .avatar-decoration.top-right {
+            top: -5px;
+            right: -5px;
+        }
+
+        .avatar-decoration.bottom-left {
+            bottom: -3px;
+            left: -3px;
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .message-content {
+            max-width: 70%;
+            margin: 0 10px;
+        }
+
+        .message.self .message-content {
+            align-items: flex-end;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 可爱字体发送者名称 */
+        .sender-name {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 3px;
+            margin-left: 5px;
+            font-weight: 600;
+            font-family: 'ZCOOL KuaiLe', 'Nunito', cursive, sans-serif;
+            letter-spacing: 0.5px;
+        }
+
+        .message.self .sender-name {
+            margin-left: 0;
+            margin-right: 5px;
+        }
+
+        /* 消息气泡 - 可爱字体 */
+        .bubble {
+            padding: 10px 14px;
+            font-size: 15px;
+            line-height: 1.6;
+            word-wrap: break-word;
+            position: relative;
+            border: 2px solid #333;
+            border-radius: 12px;
+            box-shadow: 2px 2px 0 rgba(0,0,0,0.1), inset 0 0 0 1px rgba(255,255,255,0.3);
+            font-family: 'ZCOOL KuaiLe', 'Nunito', cursive, sans-serif;
+            letter-spacing: 0.3px;
+        }
+
+        /* 别人消息 - 白色 */
+        .message:not(.self) .bubble {
+            background: #fff;
+            color: #000;
+            border-top-left-radius: 4px;
+        }
+
+        /* 自己消息 - 微信绿色 */
+        .message.self .bubble {
+            background: #95ec69;
+            color: #000;
+            border-top-right-radius: 4px;
+        }
+
+        .bubble::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: -1px;
+            right: -1px;
+            bottom: -1px;
+            border: 1px solid rgba(0,0,0,0.05);
+            border-radius: inherit;
+            pointer-events: none;
+        }
+
+        /* 气泡内小装饰 */
+        .bubble-decoration {
+            position: absolute;
+            font-size: 10px;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .bubble-decoration.left {
+            left: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .bubble-decoration.right {
+            right: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        /* 图片消息 */
+        .bubble-image {
+            max-width: 180px;
+            max-height: 180px;
+            border-radius: 8px;
+            display: block;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+
+        /* 输入区域 */
+        .input-area {
+            height: 50px;
+            background: #f7f7f7;
+            border-top: 2px solid #333;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            gap: 8px;
+            position: relative;
+        }
+
+        .input-area::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: repeating-linear-gradient(
+                90deg,
+                #333 0px,
+                #333 2px,
+                transparent 2px,
+                transparent 5px
+            );
+            opacity: 0.2;
+        }
+
+        .voice-btn, .emoji-btn, .more-btn-input {
+            width: 32px;
+            height: 32px;
+            background: none;
+            border: 1px solid #999;
+            border-radius: 50%;
+            font-size: 18px;
+            cursor: pointer;
+            color: #333;
+            transition: all 0.2s;
+        }
+
+        .voice-btn:hover, .emoji-btn:hover, .more-btn-input:hover {
+            background: #e6e6e6;
+        }
+
+        .input-box {
+            flex: 1;
+            height: 36px;
+            border: 1px solid #999;
+            border-radius: 4px;
+            padding: 0 12px;
+            font-size: 15px;
+            background: #fff;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        .input-box:focus {
+            outline: none;
+            border-color: #07c160;
+        }
+
+        /* 底部指示条 */
+        .home-indicator {
+            height: 34px;
+            background: #f7f7f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-top: 1px solid #ddd;
+        }
+
+        .home-bar {
+            width: 134px;
+            height: 5px;
+            background: #333;
+            border-radius: 3px;
+            box-shadow: 0 1px 0 rgba(255,255,255,0.5);
+        }
+
+        /* 页面编号 */
+        .page-number {
+            text-align: center;
+            color: #999;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+
+        /* 保存图片时的样式 */
+        .saving-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            font-size: 20px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <!-- 清爽操作面板 -->
+    <div class="edit-panel">
+        <h2>编辑对话</h2>
+        
+        <div class="edit-section">
+            <label>选择发送人：</label>
+            <select id="senderSelect">
+                <option value="竹青">🌸 竹青</option>
+                <option value="阿静">🎒 阿静</option>
+                <option value="大鸟">🐱 大鸟</option>
+                <option value="司司" selected>📷 司司（自己）</option>
+                <option value="文心">🍳 文心</option>
+                <option value="星星">☕ 星星</option>
+            </select>
+        </div>
+
+        <div class="edit-section">
+            <label>消息内容：</label>
+            <textarea id="messageInput" placeholder="输入消息内容..."></textarea>
+            
+            <!-- Emoji 选择器 -->
+            <label style="margin-top: 10px; font-size: 12px; color: #999;">点击添加表情：</label>
+            <div class="emoji-picker">
+                <button class="emoji-btn-small" onclick="addEmoji('😊')">😊</button>
+                <button class="emoji-btn-small" onclick="addEmoji('😂')">😂</button>
+                <button class="emoji-btn-small" onclick="addEmoji('🥰')">🥰</button>
+                <button class="emoji-btn-small" onclick="addEmoji('😍')">😍</button>
+                <button class="emoji-btn-small" onclick="addEmoji('🤣')">🤣</button>
+                <button class="emoji-btn-small" onclick="addEmoji('😘')">😘</button>
+                <button class="emoji-btn-small" onclick="addEmoji('🥺')">🥺</button>
+                <button class="emoji-btn-small" onclick="addEmoji('😭')">😭</button>
+                <button class="emoji-btn-small" onclick="addEmoji('😅')">😅</button>
+                <button class="emoji-btn-small" onclick="addEmoji('🤔')">🤔</button>
+                <button class="emoji-btn-small" onclick="addEmoji('👍')">👍</button>
+                <button class="emoji-btn-small" onclick="addEmoji('👏')">👏</button>
+                <button class="emoji-btn-small" onclick="addEmoji('🙏')">🙏</button>
+                <button class="emoji-btn-small" onclick="addEmoji('💕')">💕</button>
+                <button class="emoji-btn-small" onclick="addEmoji('💖')">💖</button>
+                <button class="emoji-btn-small" onclick="addEmoji('✨')">✨</button>
+                <button class="emoji-btn-small" onclick="addEmoji('🎉')">🎉</button>
+                <button class="emoji-btn-small" onclick="addEmoji('🌸')">🌸</button>
+                <button class="emoji-btn-small" onclick="addEmoji('🌟')">🌟</button>
+                <button class="emoji-btn-small" onclick="addEmoji('💫')">💫</button>
+                <button class="emoji-btn-small" onclick="addEmoji('🐱')">🐱</button>
+                <button class="emoji-btn-small" onclick="addEmoji('🐶')">🐶</button>
+                <button class="emoji-btn-small" onclick="addEmoji('🍀')">🍀</button>
+                <button class="emoji-btn-small" onclick="addEmoji('🌈')">🌈</button>
+            </div>
+        </div>
+
+        <div class="edit-section">
+            <label>发送图片（可选）：</label>
+            <div class="image-upload-area" id="imageUploadArea" onclick="document.getElementById('imageInput').click()">
+                <div class="upload-hint">点击选择图片或拖拽到此处</div>
+                <input type="file" id="imageInput" accept="image/*" style="display: none;" onchange="handleImageSelect(event)">
+            </div>
+        </div>
+
+        <div class="edit-section">
+            <label>时间标签（可选）：</label>
+            <input type="text" id="timeInput" placeholder="例如：昨天 14:30">
+        </div>
+
+        <div class="btn-group">
+            <button class="btn btn-primary" onclick="addMessage()">添加消息</button>
+            <button class="btn btn-secondary" onclick="addTimeDivider()">添加时间</button>
+            <button class="btn btn-warning" onclick="deleteLastMessage()">删除上一条</button>
+            <button class="btn btn-info" onclick="saveAsImage()">保存为图片</button>
+            <button class="btn btn-secondary" onclick="addNewPage()">添加新页面</button>
+            <button class="btn btn-danger" onclick="clearAllMessages()">清空所有</button>
+        </div>
+    </div>
+
+    <div class="print-hint">
+        提示：可以发送文字或图片消息，点击表情按钮添加emoji，对话过长时点击"添加新页面"，完成后点击"保存为图片"导出PNG。
+    </div>
+
+    <!-- 页面容器 -->
+    <div id="pagesContainer">
+        <!-- 第一页 -->
+        <div class="page-number" data-page="1">第 1 页</div>
+        <div class="phone-page" id="page1">
+            <div class="status-bar">
+                <div class="status-left">
+                    <span id="currentTime">9:41</span>
+                </div>
+                <div class="status-right">
+                    <span>📶</span>
+                    <span>📡</span>
+                    <span>🔋</span>
+                </div>
+            </div>
+
+            <div class="nav-bar">
+                <div class="nav-left">
+                    <button class="back-btn">‹</button>
+                </div>
+                <div class="nav-title">发财少女（6）</div>
+                <div class="nav-right">
+                    <button class="more-btn">👥</button>
+                </div>
+            </div>
+
+            <div class="chat-container" id="chatContainer1">
+                <div class="time-divider">昨天 14:30</div>
+
+                <div class="message">
+                    <div class="avatar-wrapper">
+                        <div class="avatar">
+                            <img src="头像/竹青.png" alt="竹青">
+                        </div>
+                        <span class="avatar-decoration top-right">✨</span>
+                    </div>
+                    <div class="message-content">
+                        <div class="sender-name">竹青</div>
+                        <div class="bubble">
+                            姐妹们，今天天气真好呀！☀️
+                            <span class="bubble-decoration right">💫</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="message">
+                    <div class="avatar-wrapper">
+                        <div class="avatar">
+                            <img src="头像/阿静.png" alt="阿静">
+                        </div>
+                        <span class="avatar-decoration bottom-left">🌸</span>
+                    </div>
+                    <div class="message-content">
+                        <div class="sender-name">阿静</div>
+                        <div class="bubble">
+                            是啊，适合出去走走～
+                            <span class="bubble-decoration right">✨</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="message">
+                    <div class="avatar-wrapper">
+                        <div class="avatar">
+                            <img src="头像/大鸟.png" alt="大鸟">
+                        </div>
+                        <span class="avatar-decoration top-right">🐱</span>
+                    </div>
+                    <div class="message-content">
+                        <div class="sender-name">大鸟</div>
+                        <div class="bubble">
+                            我的两只猫咪今天特别乖 🐱💕
+                            <span class="bubble-decoration right">💖</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="message self">
+                    <div class="avatar-wrapper">
+                        <div class="avatar">
+                            <img src="头像/司司.png" alt="司司">
+                        </div>
+                        <span class="avatar-decoration top-right">📷</span>
+                    </div>
+                    <div class="message-content">
+                        <div class="sender-name">司司</div>
+                        <div class="bubble">
+                            哈哈，我也想养猫了！🥰
+                            <span class="bubble-decoration left">✨</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-area">
+                <button class="voice-btn">🎤</button>
+                <input type="text" class="input-box" placeholder="">
+                <button class="emoji-btn">😊</button>
+                <button class="more-btn-input">➕</button>
+            </div>
+
+            <div class="home-indicator">
+                <div class="home-bar"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="add-page-btn">
+        <button class="btn btn-secondary" onclick="addNewPage()">添加新页面</button>
+    </div>
+
+    <script>
+        const members = {
+            竹青: { avatar: '头像/竹青.png', isSelf: false, decoration: '✨' },
+            阿静: { avatar: '头像/阿静.png', isSelf: false, decoration: '🌸' },
+            大鸟: { avatar: '头像/大鸟.png', isSelf: false, decoration: '🐱' },
+            司司: { avatar: '头像/司司.png', isSelf: true, decoration: '📷' },
+            文心: { avatar: '头像/文心.png', isSelf: false, decoration: '🍳' },
+            星星: { avatar: '头像/星星.png', isSelf: false, decoration: '☕' }
+        };
+
+        let currentPage = 1;
+        let pageCount = 1;
+        let selectedImage = null;
+
+        function updateTime() {
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            document.getElementById('currentTime').textContent = `${hours}:${minutes}`;
+        }
+        updateTime();
+        setInterval(updateTime, 60000);
+
+        function getCurrentChatContainer() {
+            return document.getElementById(`chatContainer${currentPage}`);
+        }
+
+        // 添加emoji到输入框
+        function addEmoji(emoji) {
+            const input = document.getElementById('messageInput');
+            input.value += emoji;
+            input.focus();
+        }
+
+        function handleImageSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    selectedImage = e.target.result;
+                    const uploadArea = document.getElementById('imageUploadArea');
+                    uploadArea.innerHTML = `<img src="${selectedImage}" class="preview-image">`;
+                    uploadArea.classList.add('has-image');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function clearSelectedImage() {
+            selectedImage = null;
+            const uploadArea = document.getElementById('imageUploadArea');
+            uploadArea.innerHTML = '<div class="upload-hint">点击选择图片或拖拽到此处</div><input type="file" id="imageInput" accept="image/*" style="display: none;" onchange="handleImageSelect(event)">';
+            uploadArea.classList.remove('has-image');
+        }
+
+        function addMessage() {
+            const sender = document.getElementById('senderSelect').value;
+            const content = document.getElementById('messageInput').value.trim();
+            const timeText = document.getElementById('timeInput').value.trim();
+            
+            if (!content && !selectedImage) {
+                alert('请输入消息内容或选择图片！');
+                return;
+            }
+
+            const container = getCurrentChatContainer();
+            
+            if (timeText) {
+                const timeDiv = document.createElement('div');
+                timeDiv.className = 'time-divider';
+                timeDiv.textContent = timeText;
+                container.appendChild(timeDiv);
+            }
+
+            const messageDiv = document.createElement('div');
+            messageDiv.className = members[sender].isSelf ? 'message self' : 'message';
+            
+            const decoration = members[sender].decoration;
+            const bubbleDecoration = members[sender].isSelf ? 'left' : 'right';
+            
+            let bubbleContent = '';
+            if (content) {
+                bubbleContent += `<div>${content}</div>`;
+            }
+            if (selectedImage) {
+                bubbleContent += `<img src="${selectedImage}" class="bubble-image" style="margin-top: ${content ? '8px' : '0'}">`;
+            }
+            
+            messageDiv.innerHTML = `
+                <div class="avatar-wrapper">
+                    <div class="avatar">
+                        <img src="${members[sender].avatar}" alt="${sender}">
+                    </div>
+                    <span class="avatar-decoration top-right">${decoration}</span>
+                </div>
+                <div class="message-content">
+                    <div class="sender-name">${sender}</div>
+                    <div class="bubble">
+                        ${bubbleContent}
+                        <span class="bubble-decoration ${bubbleDecoration}">✨</span>
+                    </div>
+                </div>
+            `;
+            
+            container.appendChild(messageDiv);
+            container.scrollTop = container.scrollHeight;
+            
+            document.getElementById('messageInput').value = '';
+            document.getElementById('timeInput').value = '';
+            clearSelectedImage();
+        }
+
+        function addTimeDivider() {
+            const timeText = document.getElementById('timeInput').value.trim() || new Date().toLocaleString('zh-CN', { 
+                month: 'short', 
+                day: 'numeric', 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+            
+            const container = getCurrentChatContainer();
+            const timeDiv = document.createElement('div');
+            timeDiv.className = 'time-divider';
+            timeDiv.textContent = timeText;
+            container.appendChild(timeDiv);
+            container.scrollTop = container.scrollHeight;
+            document.getElementById('timeInput').value = '';
+        }
+
+        // 删除上一条消息
+        function deleteLastMessage() {
+            const container = getCurrentChatContainer();
+            const messages = container.querySelectorAll('.message, .time-divider');
+            
+            if (messages.length === 0) {
+                // 当前页没有消息，尝试回到上一页删除
+                if (currentPage > 1) {
+                    const prevContainer = document.getElementById(`chatContainer${currentPage - 1}`);
+                    const prevMessages = prevContainer.querySelectorAll('.message, .time-divider');
+                    if (prevMessages.length > 0) {
+                        prevMessages[prevMessages.length - 1].remove();
+                        alert('已删除上一条消息');
+                        return;
+                    }
+                }
+                alert('没有可删除的消息');
+                return;
+            }
+            
+            // 删除最后一条消息
+            messages[messages.length - 1].remove();
+        }
+
+        function clearAllMessages() {
+            if (confirm('确定要清空所有对话吗？此操作不可恢复！')) {
+                // 清空第一页
+                const container1 = document.getElementById('chatContainer1');
+                if (container1) {
+                    container1.innerHTML = '';
+                }
+                
+                // 删除所有额外页面
+                const extraPages = document.querySelectorAll('.phone-page:not(#page1)');
+                extraPages.forEach(page => {
+                    const pageNum = page.id.replace('page', '');
+                    const pageNumberDiv = document.querySelector(`.page-number[data-page="${pageNum}"]`);
+                    if (pageNumberDiv) {
+                        pageNumberDiv.remove();
+                    }
+                    page.remove();
+                });
+                
+                // 重置计数
+                pageCount = 1;
+                currentPage = 1;
+                
+                // 更新页面编号
+                const firstPageNumber = document.querySelector('.page-number[data-page="1"]');
+                if (firstPageNumber) {
+                    firstPageNumber.textContent = '第 1 页';
+                }
+            }
+        }
+
+        function addNewPage() {
+            pageCount++;
+            const container = document.getElementById('pagesContainer');
+            
+            const pageNumberDiv = document.createElement('div');
+            pageNumberDiv.className = 'page-number';
+            pageNumberDiv.setAttribute('data-page', pageCount);
+            pageNumberDiv.textContent = `第 ${pageCount} 页`;
+            
+            const newPage = document.createElement('div');
+            newPage.className = 'phone-page';
+            newPage.id = `page${pageCount}`;
+            newPage.innerHTML = `
+                <div class="status-bar">
+                    <div class="status-left">
+                        <span>${document.getElementById('currentTime').textContent}</span>
+                    </div>
+                    <div class="status-right">
+                        <span>📶</span>
+                        <span>📡</span>
+                        <span>🔋</span>
+                    </div>
+                </div>
+                <div class="nav-bar">
+                    <div class="nav-left">
+                        <button class="back-btn">‹</button>
+                    </div>
+                    <div class="nav-title">发财少女（6）</div>
+                    <div class="nav-right">
+                        <button class="more-btn">👥</button>
+                    </div>
+                </div>
+                <div class="chat-container" id="chatContainer${pageCount}"></div>
+                <div class="input-area">
+                    <button class="voice-btn">🎤</button>
+                    <input type="text" class="input-box" placeholder="">
+                    <button class="emoji-btn">😊</button>
+                    <button class="more-btn-input">➕</button>
+                </div>
+                <div class="home-indicator">
+                    <div class="home-bar"></div>
+                </div>
+            `;
+            
+            container.appendChild(pageNumberDiv);
+            container.appendChild(newPage);
+            currentPage = pageCount;
+            updatePageNumbers();
+            newPage.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function updatePageNumbers() {
+            const numbers = document.querySelectorAll('.page-number');
+            numbers.forEach((el, index) => {
+                el.textContent = `第 ${index + 1} 页`;
+            });
+        }
+
+        async function saveAsImage() {
+            const pages = document.querySelectorAll('.phone-page');
+            if (pages.length === 0) {
+                alert('没有可保存的内容');
+                return;
+            }
+
+            // 创建进度显示
+            const overlay = document.createElement('div');
+            overlay.className = 'saving-overlay';
+            overlay.innerHTML = '正在生成图片，请稍候...<br><small style="font-size:14px;color:#666;">第 1/${pages.length} 页</small>';
+            overlay.style.flexDirection = 'column';
+            document.body.appendChild(overlay);
+
+            try {
+                for (let i = 0; i < pages.length; i++) {
+                    const page = pages[i];
+                    overlay.innerHTML = `正在生成图片...<br><small style="font-size:14px;color:#666;">第 ${i + 1}/${pages.length} 页</small>`;
+                    
+                    // 确保页面元素完全加载
+                    await new Promise(resolve => setTimeout(resolve, 100));
+
+                    const canvas = await html2canvas(page, {
+                        scale: 2,
+                        useCORS: true,
+                        allowTaint: false,
+                        backgroundColor: '#ffffff',
+                        logging: false,
+                        imageTimeout: 15000,
+                        onclone: function(clonedDoc) {
+                            // 确保克隆的文档完全渲染
+                            clonedDoc.body.style.backgroundColor = '#ffffff';
+                        }
+                    });
+
+                    // 转换为 blob
+                    const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+                    
+                    // 创建下载链接
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.download = `发财少女聊天记录_${i + 1}.png`;
+                    link.href = url;
+                    link.style.display = 'none';
+                    document.body.appendChild(link);
+                    link.click();
+                    
+                    // 清理
+                    setTimeout(() => {
+                        document.body.removeChild(link);
+                        URL.revokeObjectURL(url);
+                    }, 100);
+                    
+                    // 每页之间稍微延迟
+                    if (i < pages.length - 1) {
+                        await new Promise(resolve => setTimeout(resolve, 800));
+                    }
+                }
+                
+                overlay.innerHTML = '✨ 图片保存成功！<br><small style="font-size:14px;color:#666;">请查看下载文件夹</small>';
+                setTimeout(() => overlay.remove(), 2500);
+            } catch (error) {
+                console.error('保存失败:', error);
+                overlay.innerHTML = `❌ 保存失败<br><small style="font-size:12px;color:#666;">${error.message || '请重试'}</small>`;
+                setTimeout(() => overlay.remove(), 3000);
+            }
+        }
+
+        document.getElementById('messageInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                addMessage();
+            }
+        });
+
+        const uploadArea = document.getElementById('imageUploadArea');
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = '#07c160';
+        });
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.style.borderColor = '#d9d9d9';
+        });
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = '#d9d9d9';
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                const file = files[0];
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        selectedImage = event.target.result;
+                        uploadArea.innerHTML = `<img src="${selectedImage}" class="preview-image">`;
+                        uploadArea.classList.add('has-image');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
